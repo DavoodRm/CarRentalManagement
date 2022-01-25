@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CarRentalManagement.Server.Configurations.Entities;
 using CarRentalManagement.Shared.Domain;
 
 namespace CarRentalManagement.Server.Data
@@ -25,5 +26,16 @@ namespace CarRentalManagement.Server.Data
         public DbSet<Model> Models { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new ColourSeedConfiguration());
+            builder.ApplyConfiguration(new ModelSeedConfiguration());
+            builder.ApplyConfiguration(new MakeSeedConfiguration());
+            builder.ApplyConfiguration(new RoleSeedConfiguration());
+            builder.ApplyConfiguration(new UserSeedConfiguration());
+            builder.ApplyConfiguration(new UserRoleSeedConfiguration());
+        }
     }
 }
