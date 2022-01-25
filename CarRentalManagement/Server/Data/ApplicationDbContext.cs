@@ -1,14 +1,10 @@
-﻿using CarRentalManagement.Server.Models;
+﻿using CarRentalManagement.Server.Configurations.Entities;
+using CarRentalManagement.Server.Models;
+using CarRentalManagement.Shared.Domain;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CarRentalManagement.Server.Configurations.Entities;
-using CarRentalManagement.Shared.Domain;
 
 namespace CarRentalManagement.Server.Data
 {

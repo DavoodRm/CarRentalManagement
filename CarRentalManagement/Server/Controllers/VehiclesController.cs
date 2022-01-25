@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace CarRentalManagement.Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class VehiclesController : ControllerBase
     {
@@ -31,8 +31,11 @@ namespace CarRentalManagement.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVehicles()
         {
-            var Vehicles = await _unitOfWork.Vehicles.GetAll(includes: q => q.Include(x => x.Make).Include(x => x.Model)
-                .Include(x => x.Colour));
+            var Vehicles = await _unitOfWork.Vehicles
+                .GetAll(includes: q => q
+                    .Include(x => x.Make)
+                    .Include(x => x.Model)
+                    .Include(x => x.Colour));
             return Ok(Vehicles);
         }
 

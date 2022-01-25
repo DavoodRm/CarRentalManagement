@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using CarRentalManagement.Server.IRepository;
+using CarRentalManagement.Shared.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarRentalManagement.Server.Data;
-using CarRentalManagement.Shared.Domain;
-using CarRentalManagement.Server.IRepository;
+using System.Threading.Tasks;
 
 namespace CarRentalManagement.Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class BookingsController : ControllerBase
     {
@@ -26,8 +21,10 @@ namespace CarRentalManagement.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBookings()
         {
-            var Bookings = await _unitOfWork.Bookings.GetAll(includes: q => q.Include(x => x.Vehicle)
-                .Include(x => x.Customer));
+            var Bookings = await _unitOfWork.Bookings
+                .GetAll(includes: q =>
+                    q.Include(x => x.Vehicle)
+                        .Include(x => x.Customer));
             return Ok(Bookings);
         }
 

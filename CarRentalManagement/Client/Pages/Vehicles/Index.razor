@@ -1,0 +1,74 @@
+﻿@inject IJSRuntime js
+@page "/vehicles/"
+@using System.Net
+
+@attribute [Authorize]
+@inject HttpClient _client
+<h3 class="card-title">Customers</h3>
+<hr />
+<br />
+
+@if (Vehicles == null)
+{
+    <div class="alert alert-info">loading ...</div>
+}
+else
+{
+    <table class="table table-responsive ">
+        <thead>
+            <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Daily Rate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vehicle in Vehicles)
+            {
+                <tr>
+                    <td>@vehicle.Make.Name</td>
+                    <td>@vehicle.Model.Name</td>
+                    <td>@vehicle.Year</td>
+                    <td>@vehicle.RentalRate</td>
+                    <td>
+                        <a href="/vehicles/view/@vehicle.Id" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/vehicles/edit/@vehicle.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(vehicle.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Vehicle> Vehicles;
+    protected override async Task OnInitializedAsync()
+    {
+        Vehicles = await _client.GetFromJsonAsync<List<Vehicle>>(Endpoints.VehiclesEndpoint);
+    }
+
+
+    private async Task Delete(int id)
+    {
+        var make = Vehicles.First(p => p.Id == id);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {make.Vin}?");
+        if (confirm)
+        {
+            await _client.DeleteAsync($"{Endpoints.VehiclesEndpoint}/{id}");
+            Vehicles.Remove(make);
+            //await OnInitializedAsync();
+        }
+    }
+
+}

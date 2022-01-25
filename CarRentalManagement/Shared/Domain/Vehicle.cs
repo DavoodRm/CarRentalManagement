@@ -25,7 +25,7 @@ namespace CarRentalManagement.Shared.Domain
         public string LicensePlateNumber { get; set; }
         //[Required]
         //[DataType(DataType.Currency)]
-        //public double RentalRate { get; set; }
+        public double RentalRate { get; set; }
         public virtual List<Booking> Bookings { get; set; }
         //[NotMapped]
         //public byte[] Image { get; set; }
