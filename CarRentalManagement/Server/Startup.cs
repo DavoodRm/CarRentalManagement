@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using CarRentalManagement.Server.IRepository;
+using CarRentalManagement.Server.Repository;
 
 namespace CarRentalManagement.Server
 {
@@ -48,6 +50,8 @@ namespace CarRentalManagement.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
