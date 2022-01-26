@@ -1,0 +1,21 @@
+﻿@page "/models/create/"
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+
+<h3 class="card-title">Create New Model</h3>
+<hr />
+<br />
+
+<FormComponent OnValidSubmit="@OnValidSubmit" ButtonText="Create" model="@model"></FormComponent>
+<BackToList Target="models"></BackToList>
+@code {
+
+    Model model = new Model();
+
+    private async Task OnValidSubmit()
+    {
+        await _client.PostAsJsonAsync(Endpoints.ModelsEndpoint, model);
+        _navigationManager.NavigateTo("/models/");
+    }
+
+}

@@ -1,0 +1,24 @@
+﻿@page "/models/edit/{id:int}"
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+
+<FormComponent model="@model" OnValidSubmit="@EditMake" ButtonText="Edit"/>
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    Model model = new Model();
+
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        model = await _client.GetFromJsonAsync<Model>($"{Endpoints.ModelsEndpoint}/{id}");
+    }
+
+    async Task EditMake()
+    {
+        await _client.PutAsJsonAsync($"{Endpoints.ModelsEndpoint}/{id}", model);
+        _navigationManager.NavigateTo("/models/");
+    }
+}

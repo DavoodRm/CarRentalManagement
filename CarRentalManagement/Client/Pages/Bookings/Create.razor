@@ -1,0 +1,27 @@
+﻿@page "/bookings/create/"
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+
+<h3 class="card-title">Create New Booking</h3>
+<hr />
+<br />
+
+<FormComponent booking="booking" ButtonText="Create" OnValidSubmit="OnValidSubmit"/>
+<BackToList Target="bookings"/>
+
+
+@code {
+
+    Booking booking = new Booking()
+    {
+        DateOut = DateTime.Now,
+        DateIn = DateTime.Now
+    };
+
+    private async Task OnValidSubmit()
+    {
+        await _client.PostAsJsonAsync(Endpoints.BookingsEndpoint, booking);
+        _navigationManager.NavigateTo("/bookings/");
+    }
+
+}
