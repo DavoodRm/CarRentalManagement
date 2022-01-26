@@ -1,22 +1,26 @@
 ﻿@page "/bookings/edit/{id:int}"
+@using CarRentalManagement.Client.Services
 @inject NavigationManager _navigationManager
 @inject HttpClient _client
+@inject HttpInterceptorService _interceptor;
 
-<FormComponent booking="@booking" OnValidSubmit="@EditMake" ButtonText="Edit"/>
+<FormComponent booking="@booking" OnValidSubmit="@EditMake" ButtonText="Edit" />
 
 @code {
     [Parameter]
     public int id { get; set; }
     Booking booking = new Booking();
 
-    
+
     protected override async Task OnParametersSetAsync()
     {
+        _interceptor.MonitorEvent();
         booking = await _client.GetFromJsonAsync<Booking>($"{Endpoints.BookingsEndpoint}/{id}");
     }
 
     async Task EditMake()
     {
+        _interceptor.MonitorEvent();
         await _client.PutAsJsonAsync($"{Endpoints.BookingsEndpoint}/{id}", booking);
         _navigationManager.NavigateTo("/bookings/");
     }

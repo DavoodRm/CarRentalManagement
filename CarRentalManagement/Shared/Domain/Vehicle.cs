@@ -6,24 +6,24 @@ namespace CarRentalManagement.Shared.Domain
 {
     public class Vehicle : BaseDomainModel
     {
-        //[Required]
+        [Required]
         public int Year { get; set; }
-        //[Required]
+        [Required]
         public int ModelId { get; set; }
         public virtual Model Model { get; set; }
-        //[Required]
+        [Required]
         public int MakeId { get; set; }
         public virtual Make Make { get; set; }
         public virtual Colour Colour { get; set; }
-        //[Required]
+        [Required]
         public int ColourId { get; set; }
-        //[Required]
-        //[StringLength(100, MinimumLength = 2)]
+        [Required]
+        [StringLength(100, MinimumLength = 2)]
         public string Vin { get; set; }
-        //[Required]
-        //[StringLength(10, MinimumLength = 5)]
+        [Required]
+        [StringLength(10, MinimumLength = 5)]
         public string LicensePlateNumber { get; set; }
-        //[Required]
+        [Required]
         //[DataType(DataType.Currency)]
         public double RentalRate { get; set; }
         public virtual List<Booking> Bookings { get; set; }

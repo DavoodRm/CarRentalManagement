@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CarRentalManagement.Client.Services;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CarRentalManagement.Client
 {
@@ -14,13 +16,20 @@ namespace CarRentalManagement.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddHttpClient("CarRentalManagement.ServerAPI", 
-                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+            builder.Services.AddHttpClient("CarRentalManagement.ServerAPI",
+                   (sp, client) =>
+                   {
+                       client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+                       client.EnableIntercept(sp);
+                   })
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("CarRentalManagement.ServerAPI"));
+
+            builder.Services.AddHttpClientInterceptor();
+            builder.Services.AddScoped<HttpInterceptorService>();
 
             builder.Services.AddApiAuthorization();
 

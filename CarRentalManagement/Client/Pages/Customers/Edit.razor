@@ -1,0 +1,29 @@
+﻿@page "/customers/edit/{id:int}"
+@using CarRentalManagement.Client.Services
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+@inject HttpInterceptorService _interceptor;
+
+<FormComponent customer="@customer" OnValidSubmit="@EditMake" ButtonText="Edit"/>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    Customer customer = new Customer();
+
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        _interceptor.MonitorEvent();
+        
+        customer = await _client.GetFromJsonAsync<Customer>($"{Endpoints.CustomersEndpoint}/{id}");
+    }
+
+    async Task EditMake()
+    {
+        _interceptor.MonitorEvent();
+        await _client.PutAsJsonAsync($"{Endpoints.CustomersEndpoint}/{id}", customer);
+        _navigationManager.NavigateTo("/customers/");
+    }
+}

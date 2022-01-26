@@ -1,0 +1,21 @@
+﻿@page "/customers/view/{id:int}"
+@using CarRentalManagement.Client.Services
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+@inject HttpInterceptorService _interceptor;
+
+<FormComponent customer="@customer" Disabled="true" />
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    Customer customer = new Customer();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _interceptor.MonitorEvent();
+        customer = await _client.GetFromJsonAsync<Customer>($"{Endpoints.CustomersEndpoint}/{id}");
+    }
+
+}

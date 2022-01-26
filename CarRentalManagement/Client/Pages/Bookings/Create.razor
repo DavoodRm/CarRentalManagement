@@ -1,14 +1,14 @@
 ﻿@page "/bookings/create/"
+@using CarRentalManagement.Client.Services
 @inject NavigationManager _navigationManager
 @inject HttpClient _client
+@inject HttpInterceptorService _interceptor;
 
 <h3 class="card-title">Create New Booking</h3>
 <hr />
 <br />
 
 <FormComponent booking="booking" ButtonText="Create" OnValidSubmit="OnValidSubmit"/>
-<BackToList Target="bookings"/>
-
 
 @code {
 
@@ -20,6 +20,7 @@
 
     private async Task OnValidSubmit()
     {
+        _interceptor.MonitorEvent();
         await _client.PostAsJsonAsync(Endpoints.BookingsEndpoint, booking);
         _navigationManager.NavigateTo("/bookings/");
     }

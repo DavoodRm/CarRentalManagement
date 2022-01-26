@@ -1,19 +1,21 @@
 ﻿@page "/colours/create/"
+@using CarRentalManagement.Client.Services
 @inject NavigationManager _navigationManager
 @inject HttpClient _client
-
+@inject HttpInterceptorService _interceptor;
 <h3 class="card-title">Create New Color</h3>
 <hr />
 <br />
 
 <FormComponent color="color" OnValidSubmit="@OnValidSubmit" ButtonText="Create"/>
-<BackToList Target="colours"/>
+
 @code {
 
     Colour color = new Colour();
 
     private async Task OnValidSubmit()
     {
+        _interceptor.MonitorEvent();
         await _client.PostAsJsonAsync(Endpoints.ColoursEndpoint, color);
         _navigationManager.NavigateTo("/colours/");
     }

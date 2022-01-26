@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime js
 @page "/colours/"
-
+@using CarRentalManagement.Client.Services
+@inject HttpInterceptorService _interceptor;
 @attribute [Authorize]
 @inject HttpClient _client
 <h3 class="card-title">Car Colours</h3>
@@ -53,6 +54,7 @@ else
     private List<Colour> Colours;
     protected override async Task OnInitializedAsync()
     {
+        _interceptor.MonitorEvent();
         Colours = await _client.GetFromJsonAsync<List<Colour>>(Endpoints.ColoursEndpoint);
     }
 
@@ -63,6 +65,7 @@ else
         var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {make.Name}?");
         if (confirm)
         {
+            _interceptor.MonitorEvent();
             await _client.DeleteAsync($"{Endpoints.ColoursEndpoint}/{id}");
             Colours.Remove(make);
             //await OnInitializedAsync();

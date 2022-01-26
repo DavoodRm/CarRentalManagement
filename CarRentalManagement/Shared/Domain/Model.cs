@@ -4,7 +4,7 @@ namespace CarRentalManagement.Shared.Domain
 {
     public class Model : BaseDomainModel
     {
-        //[Required]
+        [Required]
         public string Name { get; set; }
     }
 }

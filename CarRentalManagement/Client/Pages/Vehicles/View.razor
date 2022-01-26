@@ -1,10 +1,10 @@
-﻿@page "/vehicles/edit/{id:int}"
+﻿@page "/vehicles/view/{id:int}"
 @using CarRentalManagement.Client.Services
 @inject NavigationManager _navigationManager
 @inject HttpClient _client
 @inject HttpInterceptorService _interceptor;
 
-<FormComponent vehicle="@vehicle" OnValidSubmit="@EditMake" ButtonText="Edit"/>
+<FormComponent vehicle="@vehicle" Disabled="true"/>
 
 @code {
     [Parameter]
@@ -18,10 +18,5 @@
         vehicle = await _client.GetFromJsonAsync<Vehicle>($"{Endpoints.VehiclesEndpoint}/{id}");
     }
 
-    async Task EditMake()
-    {
-        _interceptor.MonitorEvent();
-        await _client.PutAsJsonAsync($"{Endpoints.VehiclesEndpoint}/{id}", vehicle);
-        _navigationManager.NavigateTo("/vehicles/");
-    }
+
 }
