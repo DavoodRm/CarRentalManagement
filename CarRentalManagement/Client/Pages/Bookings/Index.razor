@@ -4,6 +4,7 @@
 @inject HttpInterceptorService _interceptor;
 @attribute [Authorize]
 @inject HttpClient _client
+@implements IDisposable
 <h3 class="card-title">Booking</h3>
 <hr />
 <br />
@@ -19,7 +20,7 @@
 }
 else
 {
-    <table class="table ">
+    <table class="table " id="bookingTbl">
         <thead>
             <tr>
                 <th>Customer Tax Id</th>
@@ -35,7 +36,8 @@ else
                     <td>@booking.Customer.TaxId</td>
                     <td>@booking.DateCreated.Date.ToString("dd MMMM yyyy")</td>
                     <td>
-                        @(booking.DateIn != null ? (booking.DateIn.Value - booking.DateOut).TotalDays.ToString()
+                        @(booking.DateIn != null 
+                            ? (booking.DateIn.Value - booking.DateOut).TotalDays.ToString() 
                             : "To Be Determined")
                     </td>
                     <td>
@@ -65,6 +67,11 @@ else
         Bookings = await _client.GetFromJsonAsync<List<Booking>>(Endpoints.BookingsEndpoint);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#bookingTbl");
+    }
+
 
     private async Task Delete(int id)
     {
@@ -77,6 +84,12 @@ else
             Bookings.Remove(make);
             //await OnInitializedAsync();
         }
+    }
+
+    void IDisposable.Dispose()
+    {
+        _interceptor.DisposeEvent();
+         js.InvokeVoidAsync("DataTablesDispose", "#bookingTbl");
     }
 
 }
