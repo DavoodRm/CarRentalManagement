@@ -1,6 +1,10 @@
 ﻿@page "/models/create/"
+@using CarRentalManagement.Client.Contracts
 @inject NavigationManager _navigationManager
 @inject HttpClient _client
+@inject IHttpRepository<Model> _model
+@inject IHttpRepository<Make> _make
+@*@inherits OwningComponentBase<IHttpRepository<Model>> *@
 
 <h3 class="card-title">Create New Model</h3>
 <hr />
@@ -14,7 +18,8 @@
 
     private async Task OnValidSubmit()
     {
-        await _client.PostAsJsonAsync(Endpoints.ModelsEndpoint, model);
+        await _model.Create(Endpoints.ModelsEndpoint, model);
+    // await _client.PostAsJsonAsync(Endpoints.ModelsEndpoint, model);
         _navigationManager.NavigateTo("/models/");
     }
 

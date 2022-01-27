@@ -5,7 +5,7 @@
 
 @attribute [Authorize]
 @inject HttpClient _client
-<HeadingComponent Text="Vehicles"/>
+<HeadingComponent Text="Vehicles" />
 
 
 <a href="/vehicles/create" class="btn btn-dark">
@@ -23,6 +23,7 @@ else
     <table class="table  ">
         <thead>
             <tr>
+                <th></th>
                 <th>Make</th>
                 <th>Model</th>
                 <th>Year</th>
@@ -34,6 +35,7 @@ else
             @foreach (var vehicle in Vehicles)
             {
                 <tr>
+                    <td><img src="@vehicle.ImageName" style="height: 150px; width: 150px "/></td>
                     <td>@vehicle.Make.Name</td>
                     <td>@vehicle.Model.Name</td>
                     <td>@vehicle.Year</td>
@@ -45,7 +47,7 @@ else
                         <a href="/vehicles/edit/@vehicle.Id" class="btn btn-warning">
                             <span class="oi oi-pencil"></span>
                         </a>
-                        <button class="btn btn-danger" @onclick="@(()=>Delete(vehicle.Id))">
+                        <button class="btn btn-danger" @onclick="@(() => Delete(vehicle.Id))">
                             <span class="oi oi-delete"></span>
                         </button>
 
@@ -53,8 +55,7 @@ else
                 </tr>
 
             }
-        </tbody>
-    </table>
+        </tbody>     </table>
 }
 
 @code {

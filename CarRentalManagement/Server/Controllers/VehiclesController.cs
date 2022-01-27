@@ -31,6 +31,7 @@ namespace CarRentalManagement.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVehicles()
         {
+            
             var Vehicles = await _unitOfWork.Vehicles
                 .GetAll(includes: q => q
                     .Include(x => x.Make)
@@ -78,10 +79,10 @@ namespace CarRentalManagement.Server.Controllers
                 return BadRequest();
             }
 
-            //if (Vehicle.Image != null)
-            //{
-            //    Vehicle.ImageName = CreateFile(Vehicle.Image, Vehicle.ImageName);
-            //}
+            if (Vehicle.Image != null)
+            {
+                Vehicle.ImageName = CreateFile(Vehicle.Image, Vehicle.ImageName);
+            }
 
             _unitOfWork.Vehicles.Update(Vehicle);
 
@@ -109,11 +110,11 @@ namespace CarRentalManagement.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle Vehicle)
         {
-            //if(Vehicle.Image != null)
-            //{
-            //    Vehicle.ImageName = CreateFile(Vehicle.Image, Vehicle.ImageName);
-            //}
-            
+            if (Vehicle.Image != null)
+            {
+                Vehicle.ImageName = CreateFile(Vehicle.Image, Vehicle.ImageName);
+            }
+
             await _unitOfWork.Vehicles.Insert(Vehicle);
             await _unitOfWork.Save(HttpContext);
 
@@ -137,6 +138,8 @@ namespace CarRentalManagement.Server.Controllers
 
         private string CreateFile(byte[] image, string name)
         {
+
+    
             var url = _httpContextAccessor.HttpContext.Request.Host.Value;
             var path = $"{_webHostEnvironment.WebRootPath}\\uploads\\{name}";
             var fileStream = System.IO.File.Create(path);

@@ -24,12 +24,13 @@ namespace CarRentalManagement.Shared.Domain
         [StringLength(10, MinimumLength = 5)]
         public string LicensePlateNumber { get; set; }
         [Required]
-        //[DataType(DataType.Currency)]
+        [DataType(DataType.Currency)]
         public double RentalRate { get; set; }
         public virtual List<Booking> Bookings { get; set; }
-        //[NotMapped]
-        //public byte[] Image { get; set; }
-        //public string ImageName { get; set; }
+
+        [NotMapped]
+        public byte[] Image { get; set; }
+        public string ImageName { get; set; }
 
     }
 }

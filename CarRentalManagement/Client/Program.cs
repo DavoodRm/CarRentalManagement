@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CarRentalManagement.Client.Contracts;
 using CarRentalManagement.Client.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -30,6 +31,7 @@ namespace CarRentalManagement.Client
 
             builder.Services.AddHttpClientInterceptor();
             builder.Services.AddScoped<HttpInterceptorService>();
+            builder.Services.AddTransient(typeof(IHttpRepository<>), typeof(HttpRepository<>));
 
             builder.Services.AddApiAuthorization();
 

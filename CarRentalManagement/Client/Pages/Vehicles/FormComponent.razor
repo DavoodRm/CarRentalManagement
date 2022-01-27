@@ -5,6 +5,15 @@
     <ValidationSummary />
     
     <fieldset disabled="@Disabled">
+        
+        <div class="form-group">
+            <label>Image (optional): </label>
+            <div>
+                <InputFile OnChange="HandleFileSelection"/>
+                <p class="text-danger">@UploadFileWarning</p>
+            </div>
+        </div>
+
         <div class="form-group">
             <label>Make: </label>
             <div>
@@ -18,10 +27,10 @@
                         }
                     }
                 </InputSelect>
-                <ValidationMessage For="(()=>vehicle.MakeId)"/>
+                <ValidationMessage For="(() => vehicle.MakeId)"/>
             </div>
         </div>
-    
+
         <div class="form-group">
             <label>Model: </label>
             <div>
@@ -35,7 +44,7 @@
                         }
                     }
                 </InputSelect>
-                <ValidationMessage For="(()=>vehicle.ModelId)"/>
+                <ValidationMessage For="(() => vehicle.ModelId)"/>
             </div>
         </div>
 
@@ -52,40 +61,40 @@
                         }
                     }
                 </InputSelect>
-                <ValidationMessage For="(()=>vehicle.ColourId)"/>
+                <ValidationMessage For="(() => vehicle.ColourId)"/>
             </div>
         </div>
-    
+
         <div class="form-group">
             <label>Year: </label>
             <div>
-                <InputNumber @bind-Value="@vehicle.Year" />
-                <ValidationMessage For="(()=>vehicle.Year)"/>
+                <InputNumber @bind-Value="@vehicle.Year"/>
+                <ValidationMessage For="(() => vehicle.Year)"/>
             </div>
         </div>
-    
+
         <div class="form-group">
             <label>License Plate Number: </label>
             <div>
-                <InputText @bind-Value="@vehicle.LicensePlateNumber" />
-                <ValidationMessage For="(()=>vehicle.LicensePlateNumber)"/>
+                <InputText @bind-Value="@vehicle.LicensePlateNumber"/>
+                <ValidationMessage For="(() => vehicle.LicensePlateNumber)"/>
             </div>
         </div>
-    
+
         <div class="form-group">
             <label>Vin: </label>
             <div>
-                <InputText @bind-Value="@vehicle.Vin" />
-                <ValidationMessage For="(()=>vehicle.Vin)"/>
+                <InputText @bind-Value="@vehicle.Vin"/>
+                <ValidationMessage For="(() => vehicle.Vin)"/>
             </div>
         </div>
         <div class="form-group">
             <label>Daily Rate: </label>
             <div>
-                <InputNumber @bind-Value="@vehicle.RentalRate" />
-                <ValidationMessage For="(()=>vehicle.RentalRate)"/>
+                <InputNumber @bind-Value="@vehicle.RentalRate"/>
+                <ValidationMessage For="(() => vehicle.RentalRate)"/>
             </div>
-        </div> 
+        </div>
     </fieldset>
    
 
@@ -107,6 +116,8 @@
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
 
+    string UploadFileWarning;
+
     private IList<Make> Makes;
     private IList<Colour> Colours;
     private IList<Model> Models;
@@ -116,6 +127,29 @@
         Makes = await _client.GetFromJsonAsync<List<Make>>(Endpoints.MakesEndpoint);
         Colours = await _client.GetFromJsonAsync<List<Colour>>(Endpoints.ColoursEndpoint);
         Models = await _client.GetFromJsonAsync<List<Model>>(Endpoints.ModelsEndpoint);
+    }
+
+    private async void HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var ext = System.IO.Path.GetExtension(file.Name);
+            if (ext.ToLower().Contains("jpg")
+                || ext.ToLower().Contains("png")
+                || ext.ToLower().Contains("jpeg"))
+            {
+                var picId = Guid.NewGuid().ToString().Replace("-", "");
+                vehicle.ImageName = $"{picId}{ext}";
+                vehicle.Image = new byte[file.Size];
+                await file.OpenReadStream().ReadAsync(vehicle.Image);
+                UploadFileWarning = string.Empty;
+            }
+            else
+            {
+                UploadFileWarning = "Please select a valid image file (*.jpg | *.png)";
+            }
+        }
     }
 
 }
